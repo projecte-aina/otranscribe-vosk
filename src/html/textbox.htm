@@ -9,6 +9,21 @@
             <div class="close-message-panel"><i class="fa fa-times"></i></div>
             <div class="message-content"></div>
     </div>
+
+
+    <script>
+        function appendText() {
+            let textbox = document.querySelector('#textbox');
+            textbox.innerHTML = textbox.innerHTML + "<span>test</span>";
+        }
+    </script>
+
+
+    <div style="display: block;">
+        <p style="text-align: center;">
+        <a href="#!" onclick="appendText()">Read from Vosk</a>
+        </p>
+    </div>
     
     <div id="textbox"  class="mousetrap" contenteditable="true">
         <p data-l10n-id="d-txt1">Enter your transcript here...</p>
