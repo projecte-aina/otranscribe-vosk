@@ -44,6 +44,7 @@
     "progressor.js": "git+https://github.com/ejb/progressor.js.git",
     "sanitize-html": "^1.13.0",
     "to-markdown": "^3.0.3",
+    "vosk-browser": "^0.0.7",
     "webl10n": "^1.0.0"
   },
   "engines": {
