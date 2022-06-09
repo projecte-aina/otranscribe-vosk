@@ -1,24 +1,21 @@
-## oTranscribe
+## oTranscribe+
 
-**[oTranscribe](http://oTranscribe.com/)** is a free web app designed to take the pain out of transcribing recorded interviews.
+Despite the advances in machine learning applications, specifically Automatic Speech Recognition (ASR), the language work based within the audiovisual sector such as transcription, translation and subtitling still relies on manual labor done by experts. During the last decade, the inclusion of the new technologies only contributed to the Computer Assisted Transcription technologies, through the appearance of new startups which combine ASR and related technologies (speaker diarization, punctuation and capitalization recovery etc.) with an online editor. 
 
-- Pause (ESC), rewind (F1) and fast-forward (F2) without taking your hands off the keyboard
-- Adjust playback speed with a slider or using F3/F4
-- Your transcript is automatically saved to the browser's `localStorage` every second
-- Rich text support using `contentEditable`
-- YouTube and video file support
+However, there is a barrier of entry to the adoption of these tools, mostly due to their cost reflected on the client, which are priced based on the length of audio to be processed/transcribed. We aim to present a low-cost alternative to these platforms, both for the final user and the provider; taking advantage of the latest developments in the speech technologies, namely the use of edge (client-side) computing and open ASR models which are small and precise.
 
-... and more!
+With this platform/tool, language workers can upload a file to the web application and receive a basic transcription. Since ASR decoding is done on client-side, the provider can serve multiple users without the concern on costs per user computationally; since the server side processes will be limited.
+
+oTranscribe+ is an **[oTranscribe](http://oTranscribe.com/)** fork that adds [Vosk-Browser](https://github.com/ccoreilly/vosk-browser) functionality.
+
 
 ### Download a copy
 
-Although a [web version](http://otranscribe.com/) is available, you can install oTranscribe anywhere by following these steps:
+You can create an oTranscribe+ instace by following these steps:
 
 1. Download [the current ZIP archive](https://github.com/otranscribe/otranscribe/archive/master.zip).
 2. Compile the CSS and JS with Webpack (see below for more detailed instructions).
 3. Upload the files in the newly-generated `dist` folder to a server of your choice.
-
-Please note that, in Chrome, local copies oTranscribe may not run correctly due to the browser's [privacy settings](http://programmers.stackexchange.com/questions/72435/why-is-google-blocking-users-from-accessing-their-local-file-system-in-chromium).
 
 ### Compiling the CSS and JavaScript
 
