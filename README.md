@@ -8,28 +8,28 @@ With this platform/tool, language workers can upload a file to the web applicati
 
 oTranscribe+ is an **[oTranscribe](http://oTranscribe.com/)** fork that adds [Vosk-Browser](https://github.com/ccoreilly/vosk-browser) functionality.
 
-## Requirements
+## Extended version
 
-This project requires Node version 12. We recommend to use the [Node Version Manager](https://github.com/nvm-sh/nvm) tool, as well as the [Yarn](https://yarnpkg.com/) package manager.
+### Requirements
 
+This project requires Node version 12. We recommend to use the [Node Version Manager](https://github.com/nvm-sh/nvm) tool, as well as the [Yarn](https://yarnpkg.com/) package manager. With them you can locally use that Node version 12 and install requirements:
 
-### Download a copy
+```
+nvm use 12
+yarn install
+```
 
-You can create an oTranscribe+ instace by following these steps:
+### Usage and compilation
 
-1. Download [the current ZIP archive](https://github.com/otranscribe/otranscribe/archive/master.zip).
-2. Compile the CSS and JS with Webpack (see below for more detailed instructions).
-3. Upload the files in the newly-generated `dist` folder to a server of your choice.
+Code lives in `src` folder. There you will find the raw JavaScript and CSS files. Before you start expanding them you need to be using Node version 12 and have requirements already installed. Then, for compiling the code, obtaining a sourcemap, and 'watch-for-changes', run `make build_dev`.
 
-### Compiling the CSS and JavaScript
+`dist` folder will be filled with the end result of oTranscribe+ files and folders. You can emulate the access by a remote browser launching on that location the next Python command: `python3 -m http.server`. Having run this, you will be able to access with your browser to your local port 8000, where oTranscribe+ should be served.
 
-The `src` folder in this repository only includes the "raw" JavaScript and CSS. To compile the production-ready files:
+### Compile the production-ready files
 
 - Install [Node.js and NPM](https://nodejs.org).
 - Run `npm install` to install dependencies
 - Run `make build_prod` to compile the `dist` folder
-
-For a sourcemap and 'watch-for-changes', run `make build_dev`.
 
 ### OTR file format
 
@@ -50,7 +50,7 @@ Then run a server at the root directory of this repository at `http://localhost:
 
     casperjs test tests/
 
-### Translations
+## oTranscribe translations
 
 Translations have been provided by the following talented and generous volunteers:
 
