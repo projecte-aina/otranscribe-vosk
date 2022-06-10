@@ -42,22 +42,22 @@ module.exports = {
   plugins: [
       new ExtractTextPlugin("style.css"),
       new CopyWebpackPlugin([
-          // {
-          //     from: './src/html/',
-          //     to: './'
-          // }
           {
-              from: './node_modules/webl10n/l10n.js'
+            from: './node_modules/webl10n/l10n.js'
+          },
+          {
+            from: './node_modules/vosk-browser/dist/vosk.js'
+          },
+          {
+            from: './models',
+            to: './models'
+          }, 
+          {
+            from: './src/recognizer-processor.js'
           }
       ]),
       new HtmlWebpackPlugin({
           template: 'html-loader?interpolate&attrs=img:data-src!./src/index.htm'
-      }),
-      new CopyWebpackPlugin([
-        {
-            from: './models',
-            to: './models'
-        }
-    ]),
+      })
   ]
 };

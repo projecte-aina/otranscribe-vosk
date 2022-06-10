@@ -12,6 +12,58 @@
 
 
     <script>
+        async function readFromMicro() {
+            const resultsContainer = document.getElementById('textbox');
+            const partialContainer = document.getElementById('partial');
+
+            partialContainer.textContent = "Loading...";
+            
+            const channel = new MessageChannel();
+            const model = await Vosk.createModel('models/vosk-model-small-ca-0.4.tar.gz');
+            model.registerPort(channel.port1);
+
+            const sampleRate = 48000;
+            
+            const recognizer = new model.KaldiRecognizer(sampleRate);
+            recognizer.setWords(true);
+
+            recognizer.on("result", (message) => {
+                const result = message.result;
+                // console.log(JSON.stringify(result, null, 2));
+                
+                console.log(result.text);
+                const newSpan = document.createElement('span');
+                newSpan.textContent = `${result.text} `;
+                resultsContainer.insertAdjacentElement("beforeend", newSpan);
+            });
+            recognizer.on("partialresult", (message) => {
+                const partial = message.result.partial;
+
+                partialContainer.textContent = partial;
+            });
+            
+            partialContainer.textContent = "Ready";
+            
+            const mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: false,
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    channelCount: 1,
+                    sampleRate
+                },
+            });
+            
+            const audioContext = new AudioContext();
+            await audioContext.audioWorklet.addModule('recognizer-processor.js')
+            const recognizerProcessor = new AudioWorkletNode(audioContext, 'recognizer-processor', { channelCount: 1, numberOfInputs: 1, numberOfOutputs: 1 });
+            recognizerProcessor.port.postMessage({action: 'init', recognizerId: recognizer.id}, [ channel.port2 ])
+            recognizerProcessor.connect(audioContext.destination);
+            
+            const source = audioContext.createMediaStreamSource(mediaStream);
+            source.connect(recognizerProcessor);
+        }
+
         function appendText() {
             let textbox = document.querySelector('#textbox');
             textbox.innerHTML = textbox.innerHTML + "<span>test</span>";
@@ -21,7 +73,17 @@
 
     <div style="display: block;">
         <p style="text-align: center;">
-        <a href="#!" onclick="appendText()">Read from Vosk</a>
+        <a href="#!" onclick="readFromMicro()">Write from micro thanks to Vosk</a>
+        </p>
+    </div>
+
+    <div style="display: block;">
+        <p style="text-align: center;">
+        <a href="#!" onclick="appendText()">Read from file thanks to Vosk</a>
+        </p>
+    </div>
+    <div style="display: block;">
+        <p id="partial" style="text-align: center; color: #4C6777;">
         </p>
     </div>
     
