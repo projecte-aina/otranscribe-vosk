@@ -8,6 +8,10 @@ With this platform/tool, language workers can upload a file to the web applicati
 
 oTranscribe+ is an **[oTranscribe](http://oTranscribe.com/)** fork that adds [Vosk-Browser](https://github.com/ccoreilly/vosk-browser) functionality.
 
+## Requirements
+
+This project requires Node version 12. We recommend to use the [Node Version Manager](https://github.com/nvm-sh/nvm) tool, as well as the [Yarn](https://yarnpkg.com/) package manager.
+
 
 ### Download a copy
 
