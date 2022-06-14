@@ -15,11 +15,13 @@
         async function readFromMicro() {
             const resultsContainer = document.getElementById('textbox');
             const partialContainer = document.getElementById('partial');
+            const modelName = document.getElementById("model").value;
+            console.log("Loading ", modelName);
 
             partialContainer.textContent = "Loading...";
             
             const channel = new MessageChannel();
-            const model = await Vosk.createModel('models/vosk-model-small-ca-0.4.tar.gz');
+            const model = await Vosk.createModel('models/' + modelName);
             model.registerPort(channel.port1);
 
             const sampleRate = 48000;
@@ -71,17 +73,37 @@
     </script>
 
 
-    <div style="display: block;">
-        <p style="text-align: center;">
-        <button class="alt-input-button" onclick="readFromMicro()">Write from micro thanks to Vosk</button>
-        </p>
+    <div style="display: flex; justify-content:center; margin:auto; margin-bottom: 20px; width: 20%;">
+        <div style="display: inline;">
+        <select name="model" id="model" style="width: 100%;">
+            <option value="vosk-model-small-fa-0.4.tar.gz">FA</option>
+            <option value="vosk-model-small-es-0.3.tar.gz">ES</option>
+            <option value="vosk-model-small-fr-pguyot-0.3.tar.gz">FR</option>
+            <option value="vosk-model-small-vn-0.3.tar.gz">VN</option>
+            <option value="vosk-model-small-pt-0.3.tar.gz">PT</option>
+            <option value="vosk-model-small-en-us-0.15.tar.gz">EN-US</option>
+            <option value="vosk-model-small-de-0.15.tar.gz">DE</option>
+            <option value="vosk-model-small-it-0.4.tar.gz">IT</option>
+            <option value="vosk-model-small-cn-0.3.tar.gz">CN</option>
+            <option value="vosk-model-small-tr-0.3.tar.gz">TR</option>
+            <option value="vosk-model-small-ru-0.4.tar.gz">RU</option>
+            <option value="vosk-model-small-ca-0.4.tar.gz" selected="true">CA</option>
+            <option value="vosk-model-small-en-in-0.4.tar.gz">EN-IN</option>
+          </select>
+        </div>
     </div>
 
-    <div style="display: block;">
-        <p style="text-align: center;">
-        <button class="alt-input-button" onclick="appendText()">Read from file thanks to Vosk</button>
-        </p>
+    <div style="display: block;margin: auto;width: 30%;">
+        <div style="display: flex;flex-direction: row;justify-content: space-around;">
+            <p style="text-align: center;">
+                <button class="alt-input-button" onclick="readFromMicro()">Write from micro thanks to Vosk</button>
+            </p>
+            <p style="text-align: center;">
+                <button class="alt-input-button" onclick="appendText()">Read from file thanks to Vosk</button>
+            </p>
+        </div>  
     </div>
+
     <div style="display: block;">
         <p id="partial" style="text-align: center; color: #4C6777;">
         </p>
@@ -123,8 +145,7 @@
             <i class="fa fa-share-square-o" id="icon-exp"></i><span class="label" data-l10n-id="export">Export</span>
             
         </button>
-                
-                
+                              
         
     </div>
     <div class="export-panel">
