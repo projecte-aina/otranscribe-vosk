@@ -12,9 +12,36 @@
 
 
     <script>
-        async function readFromMicro() {
-            const resultsContainer = document.getElementById('textbox');
+        function onPartialResult(message) {
             const partialContainer = document.getElementById('partial');
+            const partial = message.result.partial;
+            partialContainer.textContent = partial;
+        }
+
+        function onResult(message) {
+            const partialContainer = document.getElementById('partial');
+            const resultsContainer = document.getElementById('textbox');
+            const grayValues = "0123456789ABCDEF";
+            
+            const result = message.result;
+            if (result.text === "") {
+                return;
+            }
+            console.log("Result:", message);
+            result.result.forEach( (e) => {
+                var idx = (14 - Math.round(e.conf * 14)) + 2;
+                var chr = grayValues[idx];
+                const newSpan = document.createElement('span');
+                newSpan.textContent = e.word + " ";
+                newSpan.title = e.conf;
+                newSpan.style.cssText = `color: #${chr}${chr}${chr};`
+                resultsContainer.insertAdjacentElement("beforeend", newSpan);
+            });
+            partialContainer.textContent = "";
+        }
+
+        async function readFromMicro() {  
+            const partialContainer = document.getElementById('partial');         
             const modelName = document.getElementById("model").value;
             console.log("Loading ", modelName);
 
@@ -28,21 +55,8 @@
             
             const recognizer = new model.KaldiRecognizer(sampleRate);
             recognizer.setWords(true);
-
-            recognizer.on("result", (message) => {
-                const result = message.result;
-                // console.log(JSON.stringify(result, null, 2));
-                
-                console.log(result.text);
-                const newSpan = document.createElement('span');
-                newSpan.textContent = `${result.text} `;
-                resultsContainer.insertAdjacentElement("beforeend", newSpan);
-            });
-            recognizer.on("partialresult", (message) => {
-                const partial = message.result.partial;
-
-                partialContainer.textContent = partial;
-            });
+            recognizer.on("result", onResult);
+            recognizer.on("partialresult", onPartialResult);
             
             partialContainer.textContent = "Ready";
             
@@ -68,7 +82,6 @@
 
         async function readFromFile(e) {
             const file = e.target.files[0];
-            const resultsContainer = document.getElementById('textbox');
             const partialContainer = document.getElementById('partial');
             const audioRef = document.getElementById('audio-ref')
             const modelName = document.getElementById("model").value;
@@ -83,21 +96,8 @@
             const sampleRate = 48000;
             const recognizer = new model.KaldiRecognizer(sampleRate);
             recognizer.setWords(true);
-
-            recognizer.on("result", (message) => {
-                const result = message.result;
-                // console.log(JSON.stringify(result, null, 2));
-                
-                console.log(result.text);
-                const newSpan = document.createElement('span');
-                newSpan.textContent = `${result.text} `;
-                resultsContainer.insertAdjacentElement("beforeend", newSpan);
-            });
-            recognizer.on("partialresult", (message) => {
-                const partial = message.result.partial;
-
-                partialContainer.textContent = partial;
-            });
+            recognizer.on("result", onResult);
+            recognizer.on("partialresult", onPartialResult);
 
 
             // const [audioSource, setAudioSource] = useState<MediaElementAudioSourceNode>();
