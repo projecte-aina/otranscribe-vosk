@@ -166,9 +166,12 @@
                 <button class="alt-input-button" onclick="readFromMicro()">Write from micro thanks to Vosk</button>
             </p>
             <p style="text-align: center;">
-                <input id="file-input" type="file" class="alt-input-button" accept="audio/*" value="Read from file thanks to Vosk">
-                <audio id="audio-ref" autoplay></audio>
-                <script>document.getElementById('file-input').addEventListener('change', readFromFile, false);</script>
+                <label for="inputTag" class="alt-input-button" style="height: 1.1rem;display: flex;justify-content: center;align-items: center;" onclick="document.getElementById('file-input').click();">
+                    Read from file thanks to Vosk
+                    <input id="file-input" type="file" accept="audio/*" style="display:none;">
+                    <audio id="audio-ref" autoplay></audio>
+                    <script>document.getElementById('file-input').addEventListener('change', readFromFile, false);</script>
+                </label>
             </p>
         </div>  
     </div>
