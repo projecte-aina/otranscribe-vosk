@@ -12,6 +12,26 @@
 
 
     <script>
+        let model = null;
+        let recognizer = null;
+        let source = null;
+
+        function stop() {
+            console.log("stopping");
+            if (model !== null) {
+                model.terminate();
+                model = null;
+            }
+            if (recognizer !== null) {
+                recognizer.remove();
+                recognizer = null;
+            }
+            if (source !== null) {
+                source.disconnect();
+                source = null;
+            }
+        }
+
         function onPartialResult(message) {
             const partialContainer = document.getElementById('partial');
             const partial = message.result.partial;
@@ -41,6 +61,8 @@
         }
 
         async function readFromMicro() {  
+            stop();
+
             const partialContainer = document.getElementById('partial');         
             const modelName = document.getElementById("model").value;
             console.log("Loading ", modelName);
@@ -48,16 +70,16 @@
             partialContainer.textContent = "Loading...";
             
             const channel = new MessageChannel();
-            const model = await Vosk.createModel('models/' + modelName);
+            model = await Vosk.createModel('models/' + modelName);
             model.registerPort(channel.port1);
 
             const sampleRate = 48000;
             
-            const recognizer = new model.KaldiRecognizer(sampleRate);
+            recognizer = new model.KaldiRecognizer(sampleRate);
             recognizer.setWords(true);
             recognizer.on("result", onResult);
             recognizer.on("partialresult", onPartialResult);
-            
+
             partialContainer.textContent = "Ready";
             
             const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -76,11 +98,13 @@
             recognizerProcessor.port.postMessage({action: 'init', recognizerId: recognizer.id}, [ channel.port2 ])
             recognizerProcessor.connect(audioContext.destination);
             
-            const source = audioContext.createMediaStreamSource(mediaStream);
+            source = audioContext.createMediaStreamSource(mediaStream);
             source.connect(recognizerProcessor);
         }
 
         async function readFromFile(e) {
+            stop();
+
             const file = e.target.files[0];
             const partialContainer = document.getElementById('partial');
             const audioRef = document.getElementById('audio-ref')
@@ -90,11 +114,11 @@
             partialContainer.textContent = "Loading...";
             
             const channel = new MessageChannel();
-            const model = await Vosk.createModel('models/' + modelName);
+            model = await Vosk.createModel('models/' + modelName);
             model.registerPort(channel.port1);
 
             const sampleRate = 48000;
-            const recognizer = new model.KaldiRecognizer(sampleRate);
+            recognizer = new model.KaldiRecognizer(sampleRate);
             recognizer.setWords(true);
             recognizer.on("result", onResult);
             recognizer.on("partialresult", onPartialResult);
@@ -122,10 +146,10 @@
             }
             };
 
-            const audioSource = audioContext.createMediaElementSource(audioPlayer);
+            source = audioContext.createMediaElementSource(audioPlayer);
 
-            audioSource.disconnect();
-            audioSource.connect(recognizerNode);
+            source.disconnect();
+            source.connect(recognizerNode);
             // TODO: investigate why recognition quality worsens when recognizerNode is connected
             // to destination
             //
@@ -163,7 +187,7 @@
     <div style="display: block;margin: auto;width: 30%;">
         <div style="display: flex;flex-direction: row;justify-content: space-around;">
             <p style="text-align: center;">
-                <button class="alt-input-button" onclick="readFromMicro()">Write from micro thanks to Vosk</button>
+                <button class="alt-input-button" onclick="readFromMicro()">Write from micro</button>
             </p>
             <p style="text-align: center;">
                 <label for="inputTag" class="alt-input-button" style="height: 1.1rem;display: flex;justify-content: center;align-items: center;" onclick="document.getElementById('file-input').click();">
@@ -172,6 +196,9 @@
                     <audio id="audio-ref" autoplay></audio>
                     <script>document.getElementById('file-input').addEventListener('change', readFromFile, false);</script>
                 </label>
+            </p>
+            <p style="text-align: center; ">
+                <button class="alt-input-button" style="width: 50px;" onclick="stop()">⏸️</button>
             </p>
         </div>  
     </div>
